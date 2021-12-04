@@ -6,7 +6,7 @@ describe('Test example', () => {
   let server: any;
 
   beforeAll(async () => {
-    server = await app(5678);
+    server = (await app()).listen();
   });
 
   afterAll(() => {
@@ -14,6 +14,6 @@ describe('Test example', () => {
   });
 
   it('GET /', async () => {
-    return request(server).get('/').expect(200).expect({ message: 'Hello from the server side' });
+    return request(server).get('/').expect(200).expect('Hello from the server side');
   });
 });
