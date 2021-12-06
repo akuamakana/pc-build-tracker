@@ -5,14 +5,16 @@ import '../styles/globals.css';
 import theme from '../styles/theme';
 import type { AppProps } from 'next/app';
 import { ChakraProvider } from '@chakra-ui/react';
-// import { QueryClient, QueryClientProvider } from 'react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
-// const queryClient = new QueryClient();
+const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider theme={theme}>
-      <Component {...pageProps} />
+      <QueryClientProvider client={queryClient}>
+        <Component {...pageProps} />
+      </QueryClientProvider>
     </ChakraProvider>
   );
 }

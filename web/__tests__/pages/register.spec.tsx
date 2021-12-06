@@ -2,9 +2,18 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Register from '@pages/register';
+import { QueryClient, QueryClientProvider } from 'react-query';
+
 describe('it renders', () => {
+  const queryClient = new QueryClient();
+  const RQWrapper: React.FC = ({ children }) => <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+
   beforeEach(() => {
-    render(<Register />);
+    render(
+      <RQWrapper>
+        <Register />
+      </RQWrapper>
+    );
   });
 
   it('renders the register page', () => {

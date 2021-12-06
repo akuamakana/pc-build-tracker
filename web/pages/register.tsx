@@ -1,14 +1,24 @@
 import { Button } from '@chakra-ui/button';
-import { Box, Flex, SimpleGrid, Spacer } from '@chakra-ui/layout';
+import { Flex, SimpleGrid } from '@chakra-ui/layout';
 import { Link as CLink, Text } from '@chakra-ui/react';
 import InputField from '@components/InputField';
-import Link from 'next/link';
 import AuthLayout from '@layout/AuthLayout';
+import { register } from '@lib/api';
 import { Form, Formik } from 'formik';
 import { NextPage } from 'next';
+import Link from 'next/link';
 import React from 'react';
+import { useMutation } from 'react-query';
+
+interface RegisterInputs {
+  email: string;
+  username: string;
+  password: string;
+  confirmPassword: string;
+}
 
 const Register: NextPage = () => {
+  const useRegisterMutation = useMutation((values: RegisterInputs) => register(values));
   const additionalLinks = (
     <>
       <Text mt={6} textAlign={['center']}>
@@ -28,7 +38,7 @@ const Register: NextPage = () => {
     </>
   );
 
-  const handleOnSubmit = async (values: any, setFieldError: any) => {
+  const handleOnSubmit = async (values: RegisterInputs, setFieldError: any) => {
     console.log(values);
 
     if (values.password !== values.confirmPassword) {
@@ -36,14 +46,15 @@ const Register: NextPage = () => {
       return;
     }
 
-    // registerMutation.mutate(values, {
-    //   onSuccess: () => {
-    //     router.push('/login');
-    //   },
-    //   onError: (error: any) => {
-    //     setFieldError(error.response.data.field, error.response.data.message);
-    //   },
-    // });
+    useRegisterMutation.mutate(values, {
+      onSuccess: () => {
+        // router.push('/login');
+        console.log('Success');
+      },
+      onError: (error: any) => {
+        setFieldError(error.response.data.field, error.response.data.message);
+      },
+    });
   };
 
   return (
@@ -52,24 +63,14 @@ const Register: NextPage = () => {
         {({ isSubmitting }) => (
           <Form>
             <SimpleGrid columns={1} spacing={6}>
-              <Box>
-                <InputField name="email" label="Email" data-testid="form-input" role="email" placeholder="Email" />
-              </Box>
-              <Box>
-                <InputField name="username" label="Username" data-testid="form-input" role="username" placeholder="Username" />
-              </Box>
-              <Box>
-                <InputField name="password" role="password" label="Password" data-testid="form-input" placeholder="Password" type="password" />
-              </Box>
-              <Box>
-                <InputField name="confirmPassword" role="confirm-password" label="Confirm Password" data-testid="form-input" placeholder="Confirm Password" type="password" />
-              </Box>
-              <Flex>
-                <Spacer />
+              <InputField name="email" label="Email" data-testid="form-input" role="email" placeholder="Email" />
+              <InputField name="username" label="Username" data-testid="form-input" role="username" placeholder="Username" />
+              <InputField name="password" role="password" label="Password" data-testid="form-input" placeholder="Password" type="password" />
+              <InputField name="confirmPassword" role="confirm-password" label="Confirm Password" data-testid="form-input" placeholder="Confirm Password" type="password" />
+              <Flex justifyContent={'center'} alignItems={'center'}>
                 <Button type="submit" isLoading={isSubmitting} role="submit">
                   Register
                 </Button>
-                <Spacer />
               </Flex>
             </SimpleGrid>
           </Form>
