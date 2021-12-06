@@ -8,5 +8,15 @@ declare namespace NodeJS {
     TYPEORM_PASSWORD: string;
     TYPEORM_DATABASE: string;
     TYPEORM_LOGGING: boolean;
+    COOKIE_NAME: string;
+    COOKIE_SECRET: string;
+  }
+}
+
+declare namespace Express {
+  export interface Request {
+    session: {
+      userId: number;
+    };
   }
 }

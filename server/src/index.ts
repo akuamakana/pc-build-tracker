@@ -1,26 +1,11 @@
+require('dotenv-safe').config();
 import { createConnection } from 'typeorm';
-import express, { Application } from 'express';
-import morgan from 'morgan';
-require('dotenv').config();
+import app from './app';
 
-const PORT = process.env.PORT;
-
-export const app = async () => {
-  const app: Application = express();
+const main = async () => {
+  const PORT = process.env.PORT;
   await createConnection();
-
-  app.use(morgan('combined'));
-
-  app.get('/', async (_, res) => res.send('Hello from the server side'));
-
-  return app;
+  return app.listen(PORT, () => console.log(`Server is listening on port ${PORT}`));
 };
 
-/* istanbul ignore next */
-app()
-  .then((app) => {
-    app.listen(PORT, () => {
-      console.log(`Server is running on ${PORT}`);
-    });
-  })
-  .catch((err) => console.error(err));
+main().catch((err) => console.error(err));
