@@ -14,6 +14,7 @@ const config: Config.InitialOptions = {
     '@entities/(.*)$': '<rootDir>/src/entities/$1',
     '@controllers/(.*)$': '<rootDir>/src/controllers/$1',
     '@src/(.*)$': '<rootDir>/src/$1',
+    '@middleware/(.*)$': '<rootDir>/src/middleware/$1',
   },
   // globals: {
   //   'ts-jest': {

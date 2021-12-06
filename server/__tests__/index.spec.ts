@@ -1,5 +1,5 @@
 import { Server } from 'http';
-import { createConnection } from 'typeorm';
+import { createConnection, getConnection } from 'typeorm';
 import app, { redisClient } from '../src/app';
 const request = require('supertest');
 const PORT = process.env.PORT;
@@ -8,6 +8,12 @@ describe('tracker server', () => {
   let server: Server;
   beforeAll(async () => {
     await createConnection();
+    const entities = getConnection().entityMetadatas;
+
+    for (const entity of entities) {
+      const repository = getConnection().getRepository(entity.name); // Get repository
+      await repository.clear(); // Clear each entity table's content
+    }
     server = app.listen(PORT);
   });
 
@@ -37,14 +43,74 @@ describe('tracker server', () => {
       expect(response.body).toEqual(true);
     });
 
-    it('should return 500', async () => {
+    it('should return 400 with no password', async () => {
+      const response = await request(server).post('/auth/register').send({
+        username: 'test2',
+        email: 'test2@gmail.com',
+      });
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({ field: 'password', message: 'Password is required' });
+    });
+
+    it('should return 400 with password less than 4 characters', async () => {
+      const response = await request(server).post('/auth/register').send({
+        username: 'test2',
+        email: 'test2@gmail.com',
+        password: '123',
+      });
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({ field: 'password', message: 'Password must be at least 4 characters' });
+    });
+
+    it('should return 400 with no email', async () => {
+      const response = await request(server).post('/auth/register').send({
+        username: 'test2',
+        password: 'test',
+      });
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({ field: 'email', message: 'Email is required' });
+    });
+
+    it('should return 400 with invalid email', async () => {
+      const response = await request(server).post('/auth/register').send({
+        username: 'test2',
+        password: 'test',
+        email: 'test',
+      });
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({ field: 'email', message: 'Invalid email' });
+    });
+
+    it('should return 400 with no username', async () => {
+      const response = await request(server).post('/auth/register').send({
+        email: 'test2@gmail.com',
+        password: 'test',
+      });
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({ field: 'username', message: 'Username is required' });
+    });
+
+    it('should return 400 with duplicate email', async () => {
+      const response = await request(server).post('/auth/register').send({
+        username: 'test2',
+        password: 'test',
+        email: 'test@gmail.com',
+      });
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({ field: 'email', message: 'Email is already in use.' });
+    });
+
+    it('should return 400 with duplicate username', async () => {
       const response = await request(server).post('/auth/register').send({
         username: 'test',
         password: 'test',
+        email: 'test2@gmail.com',
       });
-      expect(response.status).toBe(500);
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({ field: 'username', message: 'Username is already taken.' });
     });
   });
+
   describe('POST /auth/login', () => {
     it('should return 200 with username login', async () => {
       const response = await request(server).post('/auth/login').send({
@@ -80,6 +146,7 @@ describe('tracker server', () => {
       expect(response.status).toBe(401);
       expect(response.body).toEqual({ field: 'password', message: 'Invalid password' });
     });
+
     it('should return 500', async () => {
       const response = await request(server).post('/auth/login').send({
         usernameOrEmail: 'test',
