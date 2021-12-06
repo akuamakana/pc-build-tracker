@@ -8,7 +8,6 @@ export const register = async (req: Request, res: Response) => {
     const userRepository = getRepository(User);
     const user = new User();
 
-    console.log('req: ', req.body);
     user.username = req.body.username;
     user.password = await argon2.hash(req.body.password);
     user.email = req.body.email;
@@ -16,7 +15,8 @@ export const register = async (req: Request, res: Response) => {
     await userRepository.save(user);
     res.status(201).send(true);
   } catch (error) {
-    res.status(500).send({ message: error.message });
+    // istanbul ignore next
+    res.status(500).send({ field: 'alert', message: error.message });
   }
 };
 
