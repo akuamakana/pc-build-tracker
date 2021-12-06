@@ -9,3 +9,8 @@ export const register = async (values: { username: string; email: string; passwo
   const { data } = await instance.post('/auth/register', values);
   return data;
 };
+
+export const login = async (values: { usernameOrEmail: string; password: string }) => {
+  const { data } = await instance.post('/auth/login', values);
+  return data;
+};

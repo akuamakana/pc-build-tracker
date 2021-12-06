@@ -54,11 +54,17 @@ const theme = extendTheme(
   },
   withDefaultColorScheme({
     colorScheme: 'brand',
-    components: ['Button'],
+    components: ['Button', 'Link'],
   }),
   withDefaultSize({
     size: 'sm',
     components: ['Button', 'Input', 'Select'],
+  }),
+  withDefaultProps({
+    defaultProps: {
+      color: 'brand.500',
+    },
+    components: ['Link', 'CLink'],
   })
 );
 
