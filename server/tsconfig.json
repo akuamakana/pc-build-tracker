@@ -3,7 +3,7 @@
       "lib": [
          "es2018"
       ],
-      "target": "es6",
+      "target": "es5",
       "module": "commonjs",
       "moduleResolution": "node",
       "outDir": "./build",
@@ -19,6 +19,29 @@
       "noUnusedParameters": true,
       "noImplicitReturns": true,
       "noFallthroughCasesInSwitch": true,
-      "skipLibCheck": true
-   }
+      "skipLibCheck": true,
+      "baseUrl": ".",
+      "paths": {
+         "@controllers/*": [
+            "./src/controllers/*"
+         ],
+         "@entities/*": [
+            "./src/entities/*"
+         ],
+         "@routes": [
+            "./src/routes/index.ts"
+         ],
+         "@lib/*": [
+            "./src/lib/*"
+         ],
+         "@src/*": [
+            "./src/*"
+         ],
+      }
+   },
+   "exclude": [
+      "node_modules",
+      "build",
+      "__tests__"
+   ],
 }
