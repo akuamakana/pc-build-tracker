@@ -23,13 +23,13 @@ const Register: NextPage = () => {
     <>
       <Text mt={6} textAlign={['center']}>
         Already have an account?{' '}
-        <CLink as="strong" color="brand.600">
+        <CLink as="strong" color="brand.600" role="login">
           <Link href="/login">Login</Link>
         </CLink>
       </Text>
       <Text mt={2} textAlign={['center']}>
         Forgot password?{' '}
-        <CLink color="brand.600" as="strong">
+        <CLink color="brand.600" as="strong" role="reset-password">
           <Link href="/forgot-password">Reset password</Link>
         </CLink>
       </Text>

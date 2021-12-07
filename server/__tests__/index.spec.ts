@@ -90,6 +90,9 @@ describe('tracker server', () => {
       expect(response.body).toEqual({ field: 'username', message: 'Username is required' });
     });
 
+    it.todo('should return 400 with username less than 4 characters');
+    it.todo('should return 400 with "@" in username');
+
     it('should return 400 with duplicate email', async () => {
       const response = await request(server).post('/auth/register').send({
         username: 'test2',
