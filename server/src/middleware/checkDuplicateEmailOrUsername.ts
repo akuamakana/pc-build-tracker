@@ -19,6 +19,13 @@ export default async (req: Request, res: Response, next: NextFunction) => {
       return;
     }
 
+    if (req.body.username..includes('@')) {
+      res.status(400).send({ field: 'username', message: 'Username must be at least 3 characters long' });
+      return;
+    }
+
+    const userRepository = getRepository(User);
+
     let userRepository = getRepository(User);
     let user = await userRepository.findOne({ email: req.body.email });
 
