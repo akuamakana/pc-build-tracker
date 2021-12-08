@@ -10,7 +10,7 @@ describe('register page', () => {
     cy.get('[role=login]').click();
     cy.url().should('include', '/login');
   });
-  
+
   // SUCCEEDS: skipping for now
   it.skip('should register a new user', () => {
     cy.get('[role=email').type(`${random}@gmail.com`);
@@ -30,18 +30,23 @@ describe('register page', () => {
     cy.get('#field-4-feedback').should('contain', 'Username is already taken.');
   });
 
-  // TODO: Remove skip after api fix
-  it.skip('should get username contains "@" error', () => {
+  it('should get username contains "@" error', () => {
     cy.get('[role=email').type(`${random}@gmail.com`);
     cy.get('[role=username').type('test@');
     cy.get('[role=password').type('password');
     cy.get('[role=confirm-password').type('password');
     cy.get('[role=submit').click();
-    cy.get('#field-4-feedback').should('contain', 'Username is already taken.');
+    cy.get('#field-4-feedback').should('contain', 'Username cannot contain @');
   });
 
-  // TODO: Remove skip after api fix
-  it.skip('should get username is not long enough error', () => {});
+  it('should get username is not long enough error', () => {
+    cy.get('[role=email').type(`123@gmail.com`);
+    cy.get('[role=username').type('123');
+    cy.get('[role=password').type('password');
+    cy.get('[role=confirm-password').type('password');
+    cy.get('[role=submit').click();
+    cy.get('#field-4-feedback').should('contain', 'Username must be at least 4 characters long');
+  });
 
   it('should get email in use error', () => {
     cy.get('[role=email').type(`test@gmail.com`);
