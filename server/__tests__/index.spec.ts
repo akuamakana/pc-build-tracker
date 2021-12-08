@@ -90,8 +90,25 @@ describe('tracker server', () => {
       expect(response.body).toEqual({ field: 'username', message: 'Username is required' });
     });
 
-    it.todo('should return 400 with username less than 4 characters');
-    it.todo('should return 400 with "@" in username');
+    it('should return 400 with username less than 4 characters', async () => {
+      const response = await request(server).post('/auth/register').send({
+        username: '123',
+        email: 'test123@gmail.com',
+        password: 'test',
+      });
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({ field: 'username', message: 'Username must be at least 4 characters long' });
+    });
+
+    it('should return 400 with "@" in username', async () => {
+      const response = await request(server).post('/auth/register').send({
+        username: '123@',
+        email: 'test123@gmail.com',
+        password: 'test',
+      });
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({ field: 'username', message: 'Username cannot contain @' });
+    });
 
     it('should return 400 with duplicate email', async () => {
       const response = await request(server).post('/auth/register').send({
