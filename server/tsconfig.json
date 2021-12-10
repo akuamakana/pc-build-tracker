@@ -3,6 +3,9 @@
       "lib": [
          "es2018"
       ],
+      "types": [
+         "jest"
+      ],
       "target": "es5",
       "module": "commonjs",
       "moduleResolution": "node",
@@ -39,12 +42,13 @@
          ],
          "@middleware/*": [
             "./src/middleware/*"
-         ],
+         ]
       }
    },
    "exclude": [
       "node_modules",
       "build",
-      "__tests__"
-   ],
+      "__tests__",
+      "jest.setup.ts"
+   ]
 }

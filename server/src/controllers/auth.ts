@@ -45,3 +45,11 @@ export const login = async (req: Request, res: Response) => {
     res.status(500).send({ message: error.message });
   }
 };
+
+export const logout = (req: Request, res: Response) => {
+  req.session.destroy(() => {
+    res.clearCookie('userId');
+    res.clearCookie('qid');
+    res.status(200).send(true);
+  });
+};
