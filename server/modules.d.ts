@@ -1,3 +1,4 @@
+import session from 'express-session';
 declare namespace NodeJS {
   export interface ProcessEnv {
     NODE_ENV: 'development' | 'production' | 'test';
@@ -13,10 +14,8 @@ declare namespace NodeJS {
   }
 }
 
-declare namespace Express {
-  export interface Request {
-    session: {
-      userId: number;
-    };
+declare module 'express-session' {
+  export interface SessionData {
+    userId: number;
   }
 }
